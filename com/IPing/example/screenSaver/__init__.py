@@ -1,1 +1,1 @@
-__all__ = ["ScreenSaver", "ScreenBall"]
+__all__ = ["ScreenSaver"]

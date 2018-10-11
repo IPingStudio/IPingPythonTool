@@ -35,6 +35,11 @@ class ScreenSaver():
         self.root.mainloop()
 
     def runScreenSaver(self):
+        '''
+        移动球
+        检测碰撞
+        :return:
+        '''
         for ball in self.ballList:
             ball.moveBall()
             for crash in self.ballList:

@@ -19,7 +19,7 @@ class ScreenBall():
         self.posY = random.randint(int(radios) * 2, int(scrnHeight) - int(radios) * 5)
         self.scrnWidth = scrnWidth
         self.scrnHeight = scrnHeight
-        self.radios = radios
+        self.radius = radios
         self.velocityX = random.randint(-int(velocity), int(velocity))
         self.velocityY = random.randint(-int(velocity), int(velocity))
         self.velocity = math.sqrt(math.pow(self.velocityX, 2) + math.pow(self.velocityY, 2))
@@ -33,10 +33,10 @@ class ScreenBall():
         c = lambda: random.randint(0, 255)
         self.color = '#%02x%02x%02x'%(c(), c(), c())
 
-        x1 = self.posX - self.radios
-        y1 = self.posY - self.radios
-        x2 = self.posX + self.radios
-        y2 = self.posY + self.radios
+        x1 = self.posX - self.radius
+        y1 = self.posY - self.radius
+        x2 = self.posX + self.radius
+        y2 = self.posY + self.radius
 
         self.item = self.canvas.create_oval(x1, y1, x2, y2, fill=self.color, outline=self.color)
 
@@ -45,9 +45,9 @@ class ScreenBall():
         移动球
         :return:
         '''
-        if self.posX + self.radios > self.scrnWidth or self.posX + self.radios < 100:
+        if self.posX + self.radius > self.scrnWidth or self.posX + self.radius < 100:
             self.velocityX *= -1
-        if self.posY + self.radios > self.scrnHeight or self.posY + self.radios < 100:
+        if self.posY + self.radius > self.scrnHeight or self.posY + self.radius < 100:
             self.velocityY *= -1
 
         self.posX += self.velocityX
