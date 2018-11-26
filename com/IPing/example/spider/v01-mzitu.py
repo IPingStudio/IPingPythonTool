@@ -3,17 +3,24 @@ import requests
 import random
 import os, time
 
+from com.IPing.example.spider.tool.ReadProxyTxt import ReadProxyTxt
+
 def getHTML(baseUrl):
-    headers = dict()
-    headers["User-Agent"] = random.sample(userAgents, 1)
-    req = requests.get(baseUrl, headers)
+    headers = {
+        "Referer":"http://www.mzitu.com"
+    }
+    headers["User-Agent"] = random.choice(userAgents)
+    req = requests.get(baseUrl, headers=headers)
     html = etree.HTML(req.text)
     return html
 
 def getResponse(baseUrl):
-    headers = dict()
-    headers["User-Agent"] = random.sample(userAgents, 1)
-    req = requests.get(baseUrl, headers)
+    headers = {
+        "Referer": "http://www.mzitu.com"
+    }
+    headers["User-Agent"] = random.choice(userAgents)
+    proxy = random.choice(proxys)
+    req = requests.get(baseUrl, headers=headers, proxies=proxy)
     return req
 
 def mzitu_spider(baseUrl):
@@ -32,7 +39,7 @@ def img_parse(img_url):
     img_totalPage = html.xpath("//div[@class='pagenavi']/a/span/text()")[-2]
 
     for page in range(1, int(img_totalPage) + 1):
-        time.sleep(1)
+        # time.sleep(1)
         down_img(img_url + "/" + str(page), img_title)
     pass
 
@@ -60,14 +67,17 @@ def down_img(root_dir, title):
 
 if __name__ == '__main__':
     base_url = "https://www.mzitu.com/"
-
-    userAgents = ["Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.119 Safari/537.36",
-                  "User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Maxthon 2.0)",
-                  "User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; TencentTraveler 4.0)",
-                  "User-Agent: Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; 360SE)",
-                  "User-Agent:Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0",
-                  "User-Agent:Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0)",
-                  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.6; rv:2.0.1) Gecko/20100101 Firefox/4.0.1"]
-
+    userAgents = [
+        "Mozilla/5.0 (Linux; Android 4.1.1; Nexus 7 Build/JRO03D) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.166 Safari/535.19",
+        "Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; GT-I9300 Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30",
+        "Mozilla/5.0 (Linux; U; Android 2.2; en-gb; GT-P1000 Build/FROYO) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
+        "Mozilla/5.0 (Windows NT 6.2; WOW64; rv:21.0) Gecko/20100101 Firefox/21.0",
+        "Mozilla/5.0 (Android; Mobile; rv:14.0) Gecko/14.0 Firefox/14.0",
+        "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.94 Safari/537.36",
+        "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19",
+        "Mozilla/5.0 (iPad; CPU OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3",
+        "Mozilla/5.0 (iPod; U; CPU like Mac OS X; en) AppleWebKit/420.1 (KHTML, like Gecko) Version/3.0 Mobile/3A101a Safari/419.3"
+    ]
+    proxys = ReadProxyTxt.read("proxy.txt")
     for i in range(1, 2):
         mzitu_spider(base_url + "page/{0}/".format(str(i)))
