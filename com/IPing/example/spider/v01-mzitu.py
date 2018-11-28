@@ -3,7 +3,7 @@ import requests
 import random
 import os, time
 
-from com.IPing.example.spider.tool.ReadProxyTxt import ReadProxyTxt
+from com.IPing.example.spider.tool.ReadProxyFile import ReadProxyFile
 
 def getHTML(baseUrl):
     headers = {
@@ -78,6 +78,6 @@ if __name__ == '__main__':
         "Mozilla/5.0 (iPad; CPU OS 5_0 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9A334 Safari/7534.48.3",
         "Mozilla/5.0 (iPod; U; CPU like Mac OS X; en) AppleWebKit/420.1 (KHTML, like Gecko) Version/3.0 Mobile/3A101a Safari/419.3"
     ]
-    proxys = ReadProxyTxt.read("proxy.txt")
+    proxys = ReadProxyFile.readJson("proxy.json")
     for i in range(1, 2):
         mzitu_spider(base_url + "page/{0}/".format(str(i)))

@@ -1,7 +1,13 @@
+'''
+爬去国内免费代理IP
+2018-11-28：保存文件改为json
+'''
+
 import requests
 import random
 from lxml import etree
 import os
+import json
 
 def getHTML(baseUrl):
     headers = {
@@ -14,14 +20,13 @@ def getHTML(baseUrl):
 
 def writeFile(str):
 
-    with open("proxy.txt", "a") as f:
+    with open("proxy.json", "w") as f:
         f.write(str)
 
-def detection(ipStr):
+def detection(ipDic):
     detectionURL = "https://www.baidu.com"
-    tempList = ipStr.strip().split("\t")
     proxy = {}
-    proxy[str(tempList[0])] = str(tempList[1] + ":" + tempList[2])
+    proxy[str(ipDic["httpType"])] = str(ipDic["ip"]) + ":" + str(ipDic["host"])
     res = requests.get(detectionURL, proxies=proxy)
     if res.status_code == 200:
         return True
@@ -32,20 +37,22 @@ def startSpider(baseUrl):
 
     tr = HTML.xpath("//table[@id='ip_list']/tr")
 
-    if os.path.exists("proxy.txt"):
-        os.remove("proxy.txt")
+    if os.path.exists("proxy.json"):
+        os.remove("proxy.json")
 
+    content = []
     for trItem in tr:
         if tr.index(trItem) == 0:
             continue
         ip = trItem[1].text
         host = trItem[2].text
         httpType = trItem[5].text
-        writeStr = httpType + "\t" + ip + "\t" + host + "\n"
+        writeDic = {"httpType":httpType, "ip":ip, "host":host}
         # 检测代理是否可用
-        if detection(writeStr):
-            writeFile(writeStr)
-
+        if detection(writeDic):
+            content.append(writeDic)
+    jsonObj = json.dumps(content)
+    writeFile(jsonObj)
 
 
 if __name__ == '__main__':
